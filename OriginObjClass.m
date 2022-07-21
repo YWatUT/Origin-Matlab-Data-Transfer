@@ -166,7 +166,12 @@ function SetCol(obj, Col, varargin)
 end
 
 function Release(obj)
+    if ~isempty(obj.h)
       release(obj.h);
+    end
+    if ~isempty(obj.CurrentSheet)
+      release(obj.CurrentSheet);
+    end
 end
       end
 end
