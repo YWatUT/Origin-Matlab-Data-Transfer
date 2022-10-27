@@ -1,0 +1,1 @@
+robocopy @OriginObjClass C:\GroupSharedCodePath\@OriginObjClass /E
