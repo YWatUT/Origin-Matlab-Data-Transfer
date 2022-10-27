@@ -14,4 +14,5 @@ Origin.SetColUserParam(2, 'Temperature', '22');
 Origin.Send(WorksheetName, data, 3);
 Origin.SetCol(3, 'name', 'zlabel', 'type', 'z');
 Origin.SetColUserParam(3, 'Temperature', '22');
+Origin.SetColUserParam(3, 'UP2', 'anything');
 Origin.Release;                                             % Release handle so the Origin session can be properly closed

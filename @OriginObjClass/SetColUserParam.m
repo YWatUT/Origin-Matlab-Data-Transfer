@@ -22,23 +22,31 @@ function SetColUserParam(obj, Col, up_name, up_value)
 % That is, untill you do 'wks.userParam1 = 1' again.
 
 
-% For the starting version, ONLY use the first user parameter! Clean up and
-% expand the functionality later. I think in most cases one will be enough
+for i = 0:5
+    up_str = get(obj.CurrentSheet, 'UserDefLabel', num2str(i));
+    
+    if isempty(up_str)
+        % this indicates that the current user parameter hasn't been initialized yet
+        invoke(obj.CurrentSheet, 'Execute', ['wks.userParam',num2str(i+1),'$=',up_name])
+        invoke(obj.CurrentSheet, 'Execute', ['wks.userParam',num2str(i+1),'=1'])
+        invoke(obj.CurrentSheet, 'Execute', ['col(',num2str(Col),')[D',num2str(i+1),']$ =', up_value]);
+        return;
+    elseif strcmp(up_str, up_name)
+        % this indicates that the current user parameter is the same as the passed parameter
+        % the corresponding user parameter can be directly updated
+        invoke(obj.CurrentSheet, 'Execute', ['col(',num2str(Col),')[D',num2str(i+1),']$ =', up_value]);
+        return
+    else
+        % this indicates that the current user parameter exist, but is not the same as the passed
+        % parameter, so move on to the next
+        continue
+    end
 
-up_str = get(obj.CurrentSheet, 'UserDefLabel', '0');
-
-if isempty(up_str)
-    % this indicates that user parameter hasn't been initialized yet
-    invoke(obj.CurrentSheet, 'Execute', ['wks.userParam1$=',up_name])
-    invoke(obj.CurrentSheet, 'Execute', 'wks.userParam1=1')
-elseif ~strcmp(up_str, up_name)
-    % if the existing user parameter is not the same as the entering one
-    error('OriginClass.SetColUserParam : trying to set a different user parameter -- this is not yet supported')
 end
 
-% If this if statement is exited successfully, this means that there is an
-% existing user parameter with the same name -- safe to proceed
+% If the for loop is exited without return, it means that the passed user parameter is not the same
+% as the 6 defined user parameters -- maybe a little bit too much
 
-invoke(obj.CurrentSheet, 'Execute', ['col(',num2str(Col),')[D1]$ =', up_value]);
+error('OriginClass.SetColUserParam : trying to go over six user parameters -- this is not yet supported')
 
 end
